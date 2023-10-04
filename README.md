@@ -1,6 +1,6 @@
 # panopto-captions-crawler
 
-A no-compromise boilerplate for projects willing to be on the cutting edge of ECMAScript and Node.
+`panopto-captions-crawler` scrapes captions from a Panopto folder and saves them locally.
 
 ## Commands
 
