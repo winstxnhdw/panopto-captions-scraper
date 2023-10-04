@@ -6,6 +6,12 @@ A no-compromise boilerplate for projects willing to be on the cutting edge of EC
 
 ### Setup
 
+Add your NUS-authorised Panopto cookie to the `.env` file.
+
+```bash
+echo COOKIE=$COOKIE > .env
+```
+
 Install all dependencies.
 
 ```bash
