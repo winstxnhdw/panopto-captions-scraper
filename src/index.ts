@@ -69,7 +69,7 @@ async function main() {
   const results = await Promise.all(
     sessions.d.Results.map(async ({ DeliveryID }) => {
       const deliveries = await get_deliveries(DeliveryID)
-      return deliveries.map((delivery) => delivery.Caption.trim().replace(/\n/g, ' ')).join(' ')
+      return deliveries.map(({ Caption }) => Caption.trim().replace(/\n/g, ' ')).join(' ')
     }),
   )
 
