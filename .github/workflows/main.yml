@@ -1,0 +1,17 @@
+name: Build
+
+on:
+  push:
+    branches: main
+    paths:
+      - .github/workflows/main.yml
+      - .eslintrc
+      - .eslintignore
+      - tsconfig.json
+      - package.json
+      - bun.lockb
+      - '**.ts'
+
+jobs:
+  bun:
+    uses: winstxnhdw/actions/.github/workflows/bun.yml@main
