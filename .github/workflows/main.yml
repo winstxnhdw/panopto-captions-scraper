@@ -1,4 +1,4 @@
-name: Build
+name: Deploy
 
 on:
   push:
@@ -13,5 +13,43 @@ on:
       - '**.ts'
 
 jobs:
-  bun:
+  test:
     uses: winstxnhdw/actions/.github/workflows/bun.yml@main
+
+  compile:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          show-progress: false
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
+
+      - name: Install node dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Compile
+        run: bun compile
+
+      - name: Archive
+        uses: actions/upload-artifact@v3
+        with:
+          name: build
+          path: dist/PanoptoScraper
+
+  release:
+    needs: [test, compile]
+    uses: winstxnhdw/actions/.github/workflows/release.yml@main
+    with:
+      release-tag: latest
+      release-title: Build
+      release-asset: PanoptoScraper
+      artifact-name: build
+      artifact-path: dist/
+    permissions:
+      contents: write
