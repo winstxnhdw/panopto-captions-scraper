@@ -3,6 +3,7 @@
     "lint": "eslint .",
     "dev": "bun src/index.ts",
     "build": "bun scripts/build.ts",
+    "compile": "bun build src/index.ts --outfile dist/PanoptoScraper --compile",
     "test": "bun test --watch"
   },
   "dependencies": {
