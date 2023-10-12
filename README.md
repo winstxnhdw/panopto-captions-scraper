@@ -29,6 +29,12 @@ Add your NUS-authorised Panopto cookie to the `.env` file.
 echo COOKIE=$COOKIE > .env
 ```
 
+Install the dependencies.
+
+```bash
+bun install
+```
+
 Run the application.
 
 ```bash
