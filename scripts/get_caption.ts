@@ -4,7 +4,7 @@ async function main() {
   const delivery_id = prompt('[?] Video ID: ')
 
   if (!delivery_id) {
-    throw new Error('Invalid delivery ID!')
+    throw new Error('Invalid video ID!')
   }
 
   const caption = await get_caption(delivery_id)
