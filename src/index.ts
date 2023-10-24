@@ -1,5 +1,6 @@
-import { config } from '@/config'
-import { get_folder_id, replace_character } from '@/utils'
+import { get_caption } from '@/get_caption'
+import { request } from '@/request'
+import { get_folder_id } from '@/utils'
 
 interface Result {
   DeliveryID: string
@@ -11,24 +12,7 @@ interface Session {
   }
 }
 
-interface Delivery {
-  Caption: string
-}
-
-const request = async <T>(endpoint: string, content_type: string, body: BodyInit): Promise<T> => {
-  const request = await fetch(`https://mediaweb.ap.panopto.com/Panopto/${endpoint}`, {
-    method: 'POST',
-    body: body,
-    headers: {
-      'Content-Type': content_type,
-      Cookie: config.COOKIE,
-    },
-  })
-
-  return request.json()
-}
-
-const get_sessions = async (folder_id: string): Promise<Session> => {
+const get_sessions = async (folder_id: string): Promise<Session | undefined> => {
   const body = JSON.stringify({
     queryParameters: {
       sortColumn: 1,
@@ -40,27 +24,15 @@ const get_sessions = async (folder_id: string): Promise<Session> => {
   return request('Services/Data.svc/GetSessions', 'application/json', body)
 }
 
-const get_deliveries = async (delivery_id: string): Promise<Delivery[]> => {
-  const body = new URLSearchParams({
-    deliveryId: delivery_id,
-    getCaptions: 'true',
-    language: '0',
-    responseType: 'json',
-  })
-
-  return request('Pages/Viewer/DeliveryInfo.aspx', 'application/x-www-form-urlencoded', body)
-}
-
-const get_captions = async (folder_id: string): Promise<string> => {
+const get_captions = async (folder_id: string): Promise<string | undefined> => {
   const sessions = await get_sessions(folder_id)
 
-  const results = await Promise.all(
-    sessions.d.Results.map(async ({ DeliveryID }) => {
-      const deliveries = await get_deliveries(DeliveryID)
-      return deliveries.map(({ Caption }) => replace_character(Caption.trim(), '\n', ' ')).join(' ')
-    }),
-  )
+  if (!sessions) {
+    return undefined
+    throw new Error('Either your cookies are invalid or the video does not exist!')
+  }
 
+  const results = await Promise.all(sessions.d.Results.map(async ({ DeliveryID }) => get_caption(DeliveryID)))
   return results.join('\n\n')
 }
 
@@ -72,7 +44,13 @@ async function main() {
     throw new Error('Invalid folder URL!')
   }
 
-  await Bun.write(`${folder_id}.txt`, await get_captions(folder_id))
+  const captions = await get_captions(folder_id)
+
+  if (!captions) {
+    throw new Error('Either your cookies are invalid or the video does not exist!')
+  }
+
+  await Bun.write(`${folder_id}.txt`, captions)
 }
 
 void main()
