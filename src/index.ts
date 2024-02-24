@@ -29,11 +29,11 @@ const get_captions = async (folder_id: string): Promise<string | undefined> => {
 
   if (!sessions) {
     return undefined
-    throw new Error('Either your cookies are invalid or the video does not exist!')
   }
 
   const results = await Promise.all(sessions.d.Results.map(async ({ DeliveryID }) => get_caption(DeliveryID)))
-  return results.join('\n\n')
+
+  return !results.some((result) => !result) ? results.join('\n\n') : undefined
 }
 
 async function main() {
