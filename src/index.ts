@@ -31,7 +31,9 @@ const get_captions = async (folder_id: string): Promise<string | undefined> => {
     return undefined
   }
 
-  const results = await Promise.all(sessions.d.Results.map(async ({ DeliveryID }) => get_caption(DeliveryID)))
+  const results = await Promise.all(
+    sessions.d.Results.map(async ({ DeliveryID }) => get_caption(DeliveryID)),
+  )
 
   return !results.some((result) => !result) ? results.join('\n\n') : undefined
 }

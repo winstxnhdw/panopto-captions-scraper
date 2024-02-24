@@ -11,4 +11,8 @@ test('can extract folderID', () =>
 test('can handle nulls', () => expect(get_folder_id(null)).toBeUndefined())
 
 test('can handle bad URLs', () =>
-  expect(get_folder_id('https://mediaweb.ap.panopto.com/Panopto/Pages/Sessions/List.aspx')).toBeUndefined())
+  expect(
+    get_folder_id('https://mediaweb.ap.panopto.com/Panopto/Pages/Sessions/List.aspx'),
+  ).toBeUndefined())
+
+test('can handle non-URL strings', () => expect(get_folder_id('hello world')).toBeUndefined())
