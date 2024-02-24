@@ -21,8 +21,6 @@ Run the scraper and the program will prompt you for the Panopto folder URL.
 
 ## Development
 
-### Setup
-
 Add your NUS-authorised Panopto cookie to the `.env` file.
 
 ```bash
