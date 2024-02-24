@@ -1,6 +1,10 @@
 import { config } from '@/config'
 
-export const request = async <T>(endpoint: string, content_type: string, body: BodyInit): Promise<T | undefined> => {
+export const request = async <T>(
+  endpoint: string,
+  content_type: string,
+  body: BodyInit,
+): Promise<T | undefined> => {
   const request = await fetch(`https://mediaweb.ap.panopto.com/Panopto/${endpoint}`, {
     method: 'POST',
     body: body,
