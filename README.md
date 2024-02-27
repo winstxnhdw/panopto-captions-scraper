@@ -1,6 +1,7 @@
 # panopto-captions-scraper
 
 [![main.yml](https://github.com/winstxnhdw/panopto-captions-scraper/actions/workflows/main.yml/badge.svg)](https://github.com/winstxnhdw/panopto-captions-scraper/actions/workflows/main.yml)
+[![release.yml](https://github.com/winstxnhdw/panopto-captions-scraper/actions/workflows/release.yml/badge.svg)](https://github.com/winstxnhdw/panopto-captions-scraper/actions/workflows/release.yml)
 [![formatter.yml](https://github.com/winstxnhdw/panopto-captions-scraper/actions/workflows/formatter.yml/badge.svg)](https://github.com/winstxnhdw/panopto-captions-scraper/actions/workflows/formatter.yml)
 
 `panopto-captions-scraper` is an API-only web scraper for retrieving captions from a Panopto folder. It is used to populate [Examplify's](https://github.com/winstxnhdw/Examplify) vector database for essential educational content. All video captions are scraped within the folder (non-recursively) in an ordered manner.

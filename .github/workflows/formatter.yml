@@ -4,11 +4,11 @@ on:
   push:
     paths:
       - .github/workflows/formatter.yml
-      - .prettierrc
       - .eslintrc
       - .eslintignore
+      - .prettierrc
       - package.json
-      - '**.ts'
+      - '*.ts'
 
 permissions:
   contents: write
