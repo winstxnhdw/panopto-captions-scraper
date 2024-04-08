@@ -8,9 +8,7 @@ export const get_folder_id = (folder_url: string | null): string | undefined => 
     return undefined
   }
 
-  const folder_id_parameter = new URLSearchParams(new URL(verified_url.data).hash.substring(1)).get(
-    'folderID',
-  )
+  const folder_id_parameter = new URLSearchParams(new URL(verified_url.data).hash.substring(1)).get('folderID')
 
   return folder_id_parameter ? replace_character(folder_id_parameter, '"', '') : undefined
 }

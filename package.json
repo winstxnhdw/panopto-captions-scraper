@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "lint": "eslint .",
+    "lint": "biome check .",
     "dev": "bun src/index.ts",
     "get-caption": "bun scripts/get_caption.ts",
     "build": "bun scripts/build.ts",
@@ -12,13 +12,11 @@
     "zod": "^3.22.4"
   },
   "devDependencies": {
+    "@biomejs/biome": "1.6.4",
     "@typescript-eslint/eslint-plugin": "^7.0.0",
     "@typescript-eslint/parser": "^7.0.0",
     "bun-types": "^1.0.1",
     "esbuild": "^0.20.0",
-    "eslint": "^8.49.0",
-    "eslint-config-prettier": "^9.0.0",
-    "prettier": "^3.0.3",
     "typescript": "^5.2.2"
   }
 }
