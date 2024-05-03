@@ -9,13 +9,13 @@
   },
   "dependencies": {
     "tslib": "^2.6.2",
-    "zod": "^3.23.5"
+    "zod": "^3.23.6"
   },
   "devDependencies": {
     "@biomejs/biome": "1.7.2",
     "@typescript-eslint/eslint-plugin": "^7.8.0",
     "@typescript-eslint/parser": "^7.8.0",
-    "bun-types": "^1.1.6",
+    "bun-types": "^1.1.7",
     "typescript": "^5.4.5"
   }
 }
