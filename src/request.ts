@@ -1,4 +1,4 @@
-import { config } from '@/config'
+import { config } from '@/config';
 
 export const request = async <T>(endpoint: string, content_type: string, body: BodyInit): Promise<T | undefined> => {
   const request = await fetch(`https://mediaweb.ap.panopto.com/Panopto/${endpoint}`, {
@@ -8,11 +8,11 @@ export const request = async <T>(endpoint: string, content_type: string, body: B
       'Content-Type': content_type,
       Cookie: config.COOKIE,
     },
-  })
+  });
 
   try {
-    return request.json()
+    return request.json();
   } catch {
-    return undefined
+    return undefined;
   }
-}
+};

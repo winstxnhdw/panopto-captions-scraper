@@ -2,10 +2,10 @@ name: Release
 
 on:
   push:
-    branches: main
-    paths: .github/workflows/release.yml
+    branches: [main]
+    paths: [.github/workflows/release.yml]
   workflow_run:
-    workflows: Test
+    workflows: [Test]
     branches: main
     types: completed
 
