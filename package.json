@@ -4,7 +4,7 @@
     "dev": "bun src/index.ts",
     "get-caption": "bun scripts/get_caption.ts",
     "build": "bun scripts/build.ts",
-    "compile": "bun build src/index.ts --outfile dist/PanoptoScraper --compile",
+    "compile": "bun build --compile --minify --sourcemap --outfile dist/PanoptoScraper src/index.ts",
     "test": "bun test --watch"
   },
   "dependencies": {
