@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { request } from '@/request';
-import { replace_character } from '@/utils';
+import { replaceCharacter } from '@/utils';
 
 const DeliveriesSchema = z.array(
   z.object({
@@ -10,9 +10,9 @@ const DeliveriesSchema = z.array(
 
 type Deliveries = z.infer<typeof DeliveriesSchema>;
 
-const get_deliveries = async (delivery_id: string): Promise<Deliveries | undefined> => {
+const getDeliveries = async (deliveryId: string): Promise<Deliveries | undefined> => {
   const body = new URLSearchParams({
-    deliveryId: delivery_id,
+    deliveryId,
     getCaptions: 'true',
     language: '0',
     responseType: 'json',
@@ -27,10 +27,10 @@ const get_deliveries = async (delivery_id: string): Promise<Deliveries | undefin
   return DeliveriesSchema.safeParse(response).success ? response : undefined;
 };
 
-export const get_caption = async (delivery_id: string): Promise<string | undefined> => {
-  const deliveries = await get_deliveries(delivery_id);
+export const getCaption = async (deliveryId: string): Promise<string | undefined> => {
+  const deliveries = await getDeliveries(deliveryId);
 
   return deliveries
-    ? deliveries.map(({ Caption }) => replace_character(Caption.trim(), '\n', ' ')).join(' ')
+    ? deliveries.map(({ Caption }) => replaceCharacter(Caption.trim(), '\n', ' ')).join(' ')
     : undefined;
 };

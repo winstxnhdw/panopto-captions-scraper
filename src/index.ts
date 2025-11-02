@@ -1,6 +1,6 @@
-import { get_caption } from '@/get_caption';
+import { getCaption } from '@/get-caption';
 import { request } from '@/request';
-import { get_folder_id } from '@/utils';
+import { getFolderId } from '@/utils';
 
 interface Result {
   DeliveryID: string;
@@ -12,45 +12,45 @@ interface Session {
   };
 }
 
-const get_sessions = async (folder_id: string): Promise<Session | undefined> => {
+const getSessions = async (folderId: string): Promise<Session | undefined> => {
   const body = JSON.stringify({
     queryParameters: {
       sortColumn: 1,
       maxResults: 99999,
-      folderID: folder_id,
+      folderID: folderId,
     },
   });
 
   return request('Services/Data.svc/GetSessions', 'application/json', body);
 };
 
-const get_captions = async (folder_id: string): Promise<string | undefined> => {
-  const sessions = await get_sessions(folder_id);
+const getCaptions = async (folderId: string): Promise<string | undefined> => {
+  const sessions = await getSessions(folderId);
 
   if (!sessions) {
     return undefined;
   }
 
-  const results = await Promise.all(sessions.d.Results.map(async ({ DeliveryID }) => get_caption(DeliveryID)));
+  const results = await Promise.all(sessions.d.Results.map(async ({ DeliveryID }) => getCaption(DeliveryID)));
 
   return !results.some((result) => !result) ? results.join('\n\n') : undefined;
 };
 
 async function main() {
-  const folder_url = prompt('[?] Folder URL: ');
-  const folder_id = get_folder_id(folder_url);
+  const folderUrl = prompt('[?] Folder URL: ');
+  const folderId = getFolderId(folderUrl);
 
-  if (!folder_id) {
+  if (!folderId) {
     throw new Error('Invalid folder URL!');
   }
 
-  const captions = await get_captions(folder_id);
+  const captions = await getCaptions(folderId);
 
   if (!captions) {
     throw new Error('Either your cookies are invalid or the video does not exist!');
   }
 
-  await Bun.write(`${folder_id}.txt`, captions);
+  await Bun.write(`${folderId}.txt`, captions);
 }
 
 void main();
