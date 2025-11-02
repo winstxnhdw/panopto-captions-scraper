@@ -12,10 +12,20 @@ on:
 jobs:
   compile:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        target:
+          - linux-x64
+          - linux-arm64
+          - windows-x64
+          - darwin-x64
+          - darwin-arm64
+          - linux-x64-musl
+          - linux-arm64-musl
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@v5.0.0
         with:
           show-progress: false
 
@@ -28,13 +38,13 @@ jobs:
         run: bun install --frozen-lockfile
 
       - name: Compile
-        run: bun compile
+        run: bun compile --target bun-${{ matrix.target }} --outfile dist/PanoptoScraper-${{ matrix.target }}
 
       - name: Upload artifact
         uses: actions/upload-artifact@v5.0.0
         with:
-          name: build
-          path: dist/PanoptoScraper
+          name: build-${{ matrix.target }}
+          path: dist/PanoptoScraper-${{ matrix.target }}
 
   release:
     if: github.event_name == 'push' || github.event.workflow_run.conclusion == 'success'
@@ -43,8 +53,8 @@ jobs:
     with:
       release-tag: latest
       release-title: Build
-      release-asset: dist/PanoptoScraper
-      artifact-name: build
+      release-asset: dist/*
+      artifact-name: build-*
       artifact-path: dist/
     permissions:
       contents: write
