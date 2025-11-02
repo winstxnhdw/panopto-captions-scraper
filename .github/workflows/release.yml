@@ -44,7 +44,7 @@ jobs:
         uses: actions/upload-artifact@v5.0.0
         with:
           name: build-${{ matrix.target }}
-          path: dist/PanoptoScraper-${{ matrix.target }}
+          path: dist/PanoptoScraper-${{ matrix.target }}*
 
   release:
     if: github.event_name == 'push' || github.event.workflow_run.conclusion == 'success'
