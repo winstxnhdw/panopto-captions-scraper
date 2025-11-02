@@ -1,6 +1,5 @@
 import { mkdir, rm } from 'node:fs/promises';
 
-
 async function main(args: string[]) {
   const arg = args.slice(2)[0];
   const buildDirectory = 'dist';
