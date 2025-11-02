@@ -2,7 +2,7 @@
   "scripts": {
     "lint": "biome check .",
     "dev": "bun src/index.ts",
-    "get-caption": "bun scripts/get_caption.ts",
+    "get-caption": "bun scripts/get-caption.ts",
     "build": "bun scripts/build.ts",
     "compile": "bun build --compile --minify --sourcemap --outfile dist/PanoptoScraper src/index.ts",
     "test": "bun test --watch"

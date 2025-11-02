@@ -1,16 +1,15 @@
 import { mkdir, rm } from 'node:fs/promises';
 
-const build_directory = 'dist';
-
 async function main(args: string[]) {
   const arg = args.slice(2)[0];
+  const buildDirectory = 'dist';
 
-  await rm(build_directory, { recursive: true, force: true });
-  await mkdir(build_directory);
+  await rm(buildDirectory, { recursive: true, force: true });
+  await mkdir(buildDirectory);
 
   await Bun.build({
     entrypoints: ['src/index.ts'],
-    outdir: `${build_directory}`,
+    outdir: `${buildDirectory}`,
     target: 'bun',
     format: 'esm',
     minify: arg !== '--test' && arg !== '-t',
