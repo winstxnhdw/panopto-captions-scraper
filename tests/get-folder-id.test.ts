@@ -1,6 +1,6 @@
 import { expect, test } from 'bun:test';
 import { Effect } from 'effect';
-import { getFolderId } from '@/utils';
+import { getFolderId } from '@/get-folder-id';
 
 const getFolderIdEffect = (folderUrl: string) => {
   const result = Effect.runSyncExit(getFolderId(folderUrl));

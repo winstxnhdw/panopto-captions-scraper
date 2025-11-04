@@ -2,8 +2,9 @@ import { FileSystem } from '@effect/platform';
 import { BunFileSystem, BunRuntime, BunTerminal } from '@effect/platform-bun';
 import { Effect, Logger, LogLevel, Schema } from 'effect';
 import { getCaption } from '@/get-caption';
+import { getFolderId } from '@/get-folder-id';
 import { request } from '@/request';
-import { ask, getFolderId } from '@/utils';
+import { ask } from '@/utils';
 
 const SessionSchema = Schema.transform(
   Schema.Struct({
