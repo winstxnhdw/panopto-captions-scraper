@@ -1,19 +1,34 @@
 import { mkdir, rm } from 'node:fs/promises';
+import { Command, Options } from '@effect/cli';
+import { BunContext, BunRuntime } from '@effect/platform-bun';
+import { Effect } from 'effect';
 
-async function main(args: string[]) {
-  const arg = args.slice(2)[0];
-  const buildDirectory = 'dist';
+const test = Options.boolean('test').pipe(
+  Options.withAlias('t'),
+  Options.optional,
+  Options.withDescription('Disable the minify build for debug purposes'),
+);
 
-  await rm(buildDirectory, { recursive: true, force: true });
-  await mkdir(buildDirectory);
+const command = Command.make('build', { test }, ({ test }) =>
+  Effect.gen(function* () {
+    const buildDirectory = 'dist';
+    yield* Effect.tryPromise(() => rm(buildDirectory, { recursive: true, force: true }));
+    yield* Effect.tryPromise(() => mkdir(buildDirectory));
+    return yield* Effect.tryPromise(() =>
+      Bun.build({
+        entrypoints: ['src/index.ts'],
+        outdir: buildDirectory,
+        target: 'bun',
+        format: 'esm',
+        minify: !test,
+      }),
+    );
+  }),
+);
 
-  await Bun.build({
-    entrypoints: ['src/index.ts'],
-    outdir: `${buildDirectory}`,
-    target: 'bun',
-    format: 'esm',
-    minify: arg !== '--test' && arg !== '-t',
-  });
-}
+const cli = Command.run(command, {
+  name: 'Bun Build CLI',
+  version: 'v1.0.0',
+});
 
-void main(Bun.argv);
+cli(Bun.argv).pipe(Effect.provide(BunContext.layer), BunRuntime.runMain);
