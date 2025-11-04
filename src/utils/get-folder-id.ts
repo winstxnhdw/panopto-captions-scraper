@@ -2,7 +2,7 @@ import { z } from 'zod';
 import { replaceCharacter } from '@/utils';
 
 export const getFolderId = (folderUrl: string | null): string | undefined => {
-  const verifiedUrl = z.string().url().safeParse(folderUrl);
+  const verifiedUrl = z.url().safeParse(folderUrl);
 
   if (!verifiedUrl.success) {
     return undefined;
