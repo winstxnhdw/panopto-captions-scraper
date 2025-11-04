@@ -1,14 +1,21 @@
-import { z } from 'zod';
+import { Data, Effect, Schema } from 'effect';
 import { replaceCharacter } from '@/utils';
 
-export const getFolderId = (folderUrl: string | null): string | undefined => {
-  const verifiedUrl = z.url().safeParse(folderUrl);
+class InvalidFolderURLError extends Data.TaggedError('InvalidFolderURLError')<{ url: string }> {}
 
-  if (!verifiedUrl.success) {
-    return undefined;
-  }
+const getFolderIdParamter = (url: URL): Effect.Effect<string, InvalidFolderURLError, never> =>
+  Effect.gen(function* () {
+    const folderIdParameter = new URLSearchParams(url.hash.substring(1)).get('folderID');
 
-  const folderIdParameter = new URLSearchParams(new URL(verifiedUrl.data).hash.substring(1)).get('folderID');
+    return yield* folderIdParameter
+      ? Effect.succeed(replaceCharacter(folderIdParameter, '"', ''))
+      : Effect.fail(new InvalidFolderURLError({ url: url.toString() }));
+  });
 
-  return folderIdParameter ? replaceCharacter(folderIdParameter, '"', '') : undefined;
-};
+export const getFolderId = (folderUrl: string) =>
+  Effect.gen(function* () {
+    const verifiedUrl = yield* Schema.decodeUnknown(Schema.URL)(folderUrl);
+    const folderIdParameter = yield* getFolderIdParamter(verifiedUrl);
+
+    return replaceCharacter(folderIdParameter, '"', '');
+  });

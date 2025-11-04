@@ -1,56 +1,55 @@
+import { FileSystem } from '@effect/platform';
+import { BunFileSystem, BunRuntime, BunTerminal } from '@effect/platform-bun';
+import { Effect, Logger, LogLevel, Schema } from 'effect';
 import { getCaption } from '@/get-caption';
 import { request } from '@/request';
-import { getFolderId } from '@/utils';
+import { ask, getFolderId } from '@/utils';
 
-interface Result {
-  DeliveryID: string;
-}
+const SessionSchema = Schema.transform(
+  Schema.Struct({
+    d: Schema.Struct({ Results: Schema.Array(Schema.Struct({ DeliveryID: Schema.String })) }),
+  }),
+  Schema.Array(Schema.String),
+  {
+    decode: (input) => input.d.Results.map(({ DeliveryID }) => DeliveryID),
+    encode: (input) => ({ d: { Results: input.map((DeliveryID) => ({ DeliveryID })) } }),
+  },
+);
 
-interface Session {
-  d: {
-    Results: Result[];
-  };
-}
+const getSessions = (folderId: string) =>
+  Effect.gen(function* () {
+    const body = JSON.stringify({
+      queryParameters: {
+        sortColumn: 1,
+        maxResults: 99999,
+        folderID: folderId,
+      },
+    });
 
-const getSessions = async (folderId: string): Promise<Session | undefined> => {
-  const body = JSON.stringify({
-    queryParameters: {
-      sortColumn: 1,
-      maxResults: 99999,
-      folderID: folderId,
-    },
+    return yield* request('Services/Data.svc/GetSessions', 'application/json', body, SessionSchema);
   });
 
-  return request('Services/Data.svc/GetSessions', 'application/json', body);
-};
+const getCaptions = (folderId: string) =>
+  Effect.gen(function* () {
+    const sessions = yield* getSessions(folderId);
+    const results = yield* Effect.all(sessions.map(getCaption));
 
-const getCaptions = async (folderId: string): Promise<string | undefined> => {
-  const sessions = await getSessions(folderId);
+    return results.join('\n\n');
+  });
 
-  if (!sessions) {
-    return undefined;
-  }
+const main = Effect.gen(function* () {
+  const input = yield* ask('Folder URL: ');
+  const folderId = yield* getFolderId(input);
+  const captions = yield* getCaptions(folderId);
+  const filesystem = yield* FileSystem.FileSystem;
 
-  const results = await Promise.all(sessions.d.Results.map(async ({ DeliveryID }) => getCaption(DeliveryID)));
+  yield* filesystem.writeFileString(`${folderId}.txt`, captions);
+});
 
-  return !results.some((result) => !result) ? results.join('\n\n') : undefined;
-};
-
-async function main() {
-  const folderUrl = prompt('[?] Folder URL: ');
-  const folderId = getFolderId(folderUrl);
-
-  if (!folderId) {
-    throw new Error('Invalid folder URL!');
-  }
-
-  const captions = await getCaptions(folderId);
-
-  if (!captions) {
-    throw new Error('Either your cookies are invalid or the video does not exist!');
-  }
-
-  await Bun.write(`${folderId}.txt`, captions);
-}
-
-void main();
+BunRuntime.runMain(
+  main.pipe(
+    Logger.withMinimumLogLevel(LogLevel.Debug),
+    Effect.provide(BunTerminal.layer),
+    Effect.provide(BunFileSystem.layer),
+  ),
+);

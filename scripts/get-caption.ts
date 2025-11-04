@@ -1,19 +1,21 @@
+import { FileSystem } from '@effect/platform';
+import { BunFileSystem, BunRuntime, BunTerminal } from '@effect/platform-bun';
+import { Effect, Logger, LogLevel } from 'effect';
 import { getCaption } from '@/get-caption';
+import { ask } from '@/utils';
 
-async function main() {
-  const deliveryId = prompt('[?] Video ID: ');
+const main = Effect.gen(function* () {
+  const deliveryId = yield* ask('Video ID: ');
+  const caption = yield* getCaption(deliveryId);
+  const filesystem = yield* FileSystem.FileSystem;
 
-  if (!deliveryId) {
-    throw new Error('Invalid video ID!');
-  }
+  yield* filesystem.writeFileString(`${deliveryId}.txt`, caption);
+});
 
-  const caption = await getCaption(deliveryId);
-
-  if (!caption) {
-    throw new Error('Either your cookies are invalid or the video does not exist!');
-  }
-
-  await Bun.write(`${deliveryId}.txt`, caption);
-}
-
-void main();
+BunRuntime.runMain(
+  main.pipe(
+    Logger.withMinimumLogLevel(LogLevel.Debug),
+    Effect.provide(BunTerminal.layer),
+    Effect.provide(BunFileSystem.layer),
+  ),
+);

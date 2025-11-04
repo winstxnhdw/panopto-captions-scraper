@@ -1,16 +1,22 @@
 import { expect, test } from 'bun:test';
+import { Effect } from 'effect';
 import { getFolderId } from '@/utils';
+
+const getFolderIdEffect = (folderUrl: string) => {
+  const result = Effect.runSyncExit(getFolderId(folderUrl));
+  return result._op === 'Success' ? result.value : result.cause.toString();
+};
 
 test('can extract folderID', () =>
   expect(
-    getFolderId(
+    getFolderIdEffect(
       'https://mediaweb.ap.panopto.com/Panopto/Pages/Sessions/List.aspx#folderID="4bf1e9b5-2c4b-4f2c-8883-b05d0063d096"',
     ),
   ).toBe('4bf1e9b5-2c4b-4f2c-8883-b05d0063d096'));
 
-test('can handle nulls', () => expect(getFolderId(null)).toBeUndefined());
+test('will fail on bad URLs', () =>
+  expect(getFolderIdEffect('https://mediaweb.ap.panopto.com/Panopto/Pages/Sessions/List.aspx')).toStartWith(
+    'InvalidFolderURLError',
+  ));
 
-test('can handle bad URLs', () =>
-  expect(getFolderId('https://mediaweb.ap.panopto.com/Panopto/Pages/Sessions/List.aspx')).toBeUndefined());
-
-test('can handle non-URL strings', () => expect(getFolderId('hello world')).toBeUndefined());
+test('will fail on non-URL strings', () => expect(getFolderIdEffect('hello world')).toStartWith('ParseError'));

@@ -8,8 +8,10 @@
     "test": "bun test --watch"
   },
   "dependencies": {
-    "tslib": "^2.8.1",
-    "zod": "^4.1.12"
+    "@effect/platform": "^0.93.0",
+    "@effect/platform-bun": "^0.82.0",
+    "effect": "^3.19.0",
+    "tslib": "^2.8.1"
   },
   "devDependencies": {
     "@biomejs/biome": "2.3.3",

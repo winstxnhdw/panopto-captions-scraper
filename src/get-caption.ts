@@ -1,65 +1,48 @@
-import { z } from 'zod';
+import { Data, Effect, Schema } from 'effect';
 import { request } from '@/request';
 import { replaceCharacter } from '@/utils';
 
-const DeliverySchema = z.object({
-  Delivery: z.object({
-    AvailableCaptions: z.array(
-      z.object({
-        Language: z.number().transform((number) => number.toString()),
-      }),
-    ),
-  }),
+class NoCaptionsAvailableError extends Data.TaggedError('NoCaptionsAvailableError') {}
+
+const CaptionsSchema = Schema.Array(Schema.Struct({ Caption: Schema.String }));
+const DeliverySchema = Schema.Struct({
+  Delivery: Schema.Struct({ AvailableCaptions: Schema.Array(Schema.Struct({ Language: Schema.Number })) }),
 });
 
-const CaptionsSchema = z.array(
-  z.object({
-    Caption: z.string(),
-  }),
-);
+const getLanguage = (deliveryId: string) =>
+  Effect.gen(function* () {
+    const deliveryBody = new URLSearchParams({
+      deliveryId,
+      responseType: 'json',
+    });
 
-type Captions = z.infer<typeof CaptionsSchema>;
-type Delivery = z.infer<typeof DeliverySchema>;
+    const deliveryResponse = yield* request(
+      'Pages/Viewer/DeliveryInfo.aspx',
+      'application/x-www-form-urlencoded',
+      deliveryBody,
+      DeliverySchema,
+    );
 
-const getDeliveries = async (deliveryId: string): Promise<Captions | undefined> => {
-  const deliveryBody = new URLSearchParams({
-    deliveryId,
-    responseType: 'json',
+    const language = deliveryResponse.Delivery.AvailableCaptions.at(0);
+    return yield* language ? Effect.succeed(language.Language.toString()) : Effect.fail(new NoCaptionsAvailableError());
   });
 
-  const deliveryRequest = await request<Delivery>(
-    'Pages/Viewer/DeliveryInfo.aspx',
-    'application/x-www-form-urlencoded',
-    deliveryBody,
-  );
+export const getCaption = (deliveryId: string) =>
+  Effect.gen(function* () {
+    const captionsBody = new URLSearchParams({
+      deliveryId,
+      getCaptions: 'true',
+      language: yield* getLanguage(deliveryId),
+      responseType: 'json',
+    });
 
-  const deliveryResponse = await DeliverySchema.parseAsync(deliveryRequest);
-  const language = deliveryResponse.Delivery.AvailableCaptions.at(0)?.Language;
+    const captionsResponse = yield* request(
+      'Pages/Viewer/DeliveryInfo.aspx',
+      'application/x-www-form-urlencoded',
+      captionsBody,
+      CaptionsSchema,
+    );
 
-  if (!language) {
-    throw new Error('No captions available for this video!');
-  }
-
-  const captionsBody = new URLSearchParams({
-    deliveryId,
-    getCaptions: 'true',
-    language: language,
-    responseType: 'json',
+    Effect.logDebug(`Fetched ${captionsResponse.length} captions for video ${deliveryId}`);
+    return captionsResponse.map(({ Caption }) => replaceCharacter(Caption.trim(), '\n', ' ')).join(' ');
   });
-
-  const captionsRequest = await request<Captions>(
-    'Pages/Viewer/DeliveryInfo.aspx',
-    'application/x-www-form-urlencoded',
-    captionsBody,
-  );
-
-  return CaptionsSchema.safeParse(captionsRequest).success ? captionsRequest : undefined;
-};
-
-export const getCaption = async (deliveryId: string): Promise<string | undefined> => {
-  const deliveries = await getDeliveries(deliveryId);
-
-  return deliveries
-    ? deliveries.map(({ Caption }) => replaceCharacter(Caption.trim(), '\n', ' ')).join(' ')
-    : undefined;
-};

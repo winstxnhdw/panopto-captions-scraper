@@ -6,7 +6,9 @@ on:
       - .github/workflows/formatter.yml
       - biome.json
       - package.json
-      - '**.ts'
+      - src/**/*.ts
+      - scripts/**/*.ts
+      - tests/**/*.ts
 
 permissions:
   contents: write

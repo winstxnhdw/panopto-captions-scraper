@@ -9,8 +9,10 @@ on:
       - biome.json
       - tsconfig.json
       - package.json
-      - bun.lockb
-      - '**.ts'
+      - bun.lock
+      - src/**/*.ts
+      - scripts/**/*.ts
+      - tests/**/*.ts
 
 jobs:
   test:
