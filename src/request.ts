@@ -1,4 +1,7 @@
-import { Effect, Redacted, Schema } from 'effect';
+import { Data, Effect, Redacted, Schema } from 'effect';
+
+class NetworkError extends Data.TaggedError('NetworkError')<{ error: unknown }> {}
+class JSONParseError extends Data.TaggedError('JSONParseError')<{ error: unknown }> {}
 
 export const request = <A, I, R>(
   endpoint: string,
@@ -15,13 +18,12 @@ export const request = <A, I, R>(
 
     const response = yield* Effect.tryPromise({
       try: () => fetch(`https://mediaweb.ap.panopto.com/Panopto/${endpoint}`, { method: 'POST', body, headers }),
-      catch: (error) =>
-        new Error(`Network request to https://mediaweb.ap.panopto.com/Panopto/${endpoint} failed: ${error}`),
+      catch: (error) => new NetworkError({ error }),
     });
 
     const json = yield* Effect.tryPromise({
       try: () => response.json(),
-      catch: (error) => new Error(`Failed to parse JSON response: ${error}`),
+      catch: (error) => new JSONParseError({ error }),
     });
 
     return yield* Schema.decodeUnknown(schema)(json);
