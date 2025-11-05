@@ -1,6 +1,6 @@
 import { FileSystem } from '@effect/platform';
 import { BunFileSystem, BunRuntime, BunTerminal } from '@effect/platform-bun';
-import { Effect, Logger, LogLevel, Schema } from 'effect';
+import { Effect, Layer, Schema } from 'effect';
 import { getCaption } from '@/get-caption';
 import { getFolderId } from '@/get-folder-id';
 import { request } from '@/request';
@@ -47,10 +47,4 @@ const main = Effect.gen(function* () {
   yield* filesystem.writeFileString(`${folderId}.txt`, captions);
 });
 
-BunRuntime.runMain(
-  main.pipe(
-    Logger.withMinimumLogLevel(LogLevel.Debug),
-    Effect.provide(BunTerminal.layer),
-    Effect.provide(BunFileSystem.layer),
-  ),
-);
+BunRuntime.runMain(main.pipe(Effect.provide(Layer.merge(BunTerminal.layer, BunFileSystem.layer))));

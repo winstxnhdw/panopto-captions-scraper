@@ -1,6 +1,6 @@
 import { FileSystem } from '@effect/platform';
 import { BunFileSystem, BunRuntime, BunTerminal } from '@effect/platform-bun';
-import { Effect, Logger, LogLevel } from 'effect';
+import { Effect, Layer, Logger, LogLevel } from 'effect';
 import { getCaption } from '@/get-caption';
 import { ask } from '@/utils';
 
@@ -15,7 +15,6 @@ const main = Effect.gen(function* () {
 BunRuntime.runMain(
   main.pipe(
     Logger.withMinimumLogLevel(LogLevel.Debug),
-    Effect.provide(BunTerminal.layer),
-    Effect.provide(BunFileSystem.layer),
+    Effect.provide(Layer.merge(BunTerminal.layer, BunFileSystem.layer)),
   ),
 );

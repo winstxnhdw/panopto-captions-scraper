@@ -43,6 +43,6 @@ export const getCaption = (deliveryId: string) =>
       CaptionsSchema,
     );
 
-    Effect.logDebug(`Fetched ${captionsResponse.length} captions for video ${deliveryId}`);
+    yield* Effect.logDebug(`Fetched ${captionsResponse.length} captions for video ${deliveryId}`);
     return captionsResponse.map(({ Caption }) => replaceCharacter(Caption.trim(), '\n', ' ')).join(' ');
   });
