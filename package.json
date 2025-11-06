@@ -10,7 +10,7 @@
   "dependencies": {
     "@effect/platform": "^0.93.0",
     "@effect/platform-bun": "^0.83.0",
-    "effect": "^3.19.0",
+    "effect": "^3.19.1",
     "tslib": "^2.8.1"
   },
   "devDependencies": {
