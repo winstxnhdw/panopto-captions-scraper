@@ -8,7 +8,7 @@
     "test": "bun test --watch"
   },
   "dependencies": {
-    "@effect/platform": "^0.93.4",
+    "@effect/platform": "^0.93.5",
     "@effect/platform-bun": "^0.84.0",
     "effect": "^3.19.8",
     "tslib": "^2.8.1"
@@ -16,7 +16,7 @@
   "devDependencies": {
     "@biomejs/biome": "2.3.8",
     "@effect/cli": "^0.72.1",
-    "@effect/language-service": "^0.57.0",
+    "@effect/language-service": "^0.57.1",
     "@types/bun": "latest"
   },
   "peerDependencies": {
