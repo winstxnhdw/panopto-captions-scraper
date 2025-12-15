@@ -14,7 +14,7 @@
     "tslib": "^2.8.1"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.3.8",
+    "@biomejs/biome": "2.3.9",
     "@effect/cli": "^0.72.1",
     "@effect/language-service": "^0.62.3",
     "@types/bun": "latest"
