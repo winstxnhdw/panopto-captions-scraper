@@ -3,7 +3,7 @@ import { replaceCharacter } from '@/utils';
 
 class InvalidFolderURLError extends Data.TaggedError('InvalidFolderURLError')<{ url: string }> {}
 
-const getFolderIdParamter = (url: URL): Effect.Effect<string, InvalidFolderURLError, never> =>
+const getFolderIdParamter = (url: URL) =>
   Effect.gen(function* () {
     const folderIdParameter = new URLSearchParams(url.hash.substring(1)).get('folderID');
 
