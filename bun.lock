@@ -12,7 +12,7 @@
       "devDependencies": {
         "@biomejs/biome": "2.4.11",
         "@effect/cli": "^0.75.0",
-        "@effect/language-service": "^0.85.0",
+        "@effect/language-service": "^0.85.1",
         "@types/bun": "latest",
       },
       "peerDependencies": {
@@ -45,7 +45,7 @@
 
     "@effect/experimental": ["@effect/experimental@0.57.0", "", { "dependencies": { "uuid": "^11.0.3" }, "peerDependencies": { "@effect/platform": "^0.93.0", "effect": "^3.19.0", "ioredis": "^5", "lmdb": "^3" }, "optionalPeers": ["ioredis", "lmdb"] }, "sha512-usWsl3mvknRz1Wf2IelfwXoW0ftDycubCdAAGv2D8fdUMy4GK7uGJ4dSGiQiuHKGrEPqy0n0fdCgbMPY9iL41w=="],
 
-    "@effect/language-service": ["@effect/language-service@0.85.0", "", { "bin": { "effect-language-service": "cli.js" } }, "sha512-crQwaeLmpmUfKaH2K42STNFMD5cywR6kBGKZI0FkvCbDyG3xM7CikJKucMIXOBvnUviO8loq0afT1ZSCtZiaaw=="],
+    "@effect/language-service": ["@effect/language-service@0.85.1", "", { "bin": { "effect-language-service": "cli.js" } }, "sha512-EXnJjIy6zQ3nUO/MZ+ynWUb8B895KZPotd1++oTs9JjDkplwM7cb6zo8Zq2zU6piwq+KflO7amXbEfj1UMpHkw=="],
 
     "@effect/platform": ["@effect/platform@0.96.0", "", { "dependencies": { "find-my-way-ts": "^0.1.6", "msgpackr": "^1.11.4", "multipasta": "^0.2.7" }, "peerDependencies": { "effect": "^3.21.0" } }, "sha512-U7PLhkVzg7zzrgFvyWATOzD6reL87KG/fcdOxgLWBQ/J5CCU6qdPAVG+0o6o+IxcsLoqGwxs+rFxaFzrdtDV1A=="],
 
