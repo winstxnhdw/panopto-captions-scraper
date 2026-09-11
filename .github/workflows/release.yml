@@ -10,6 +10,8 @@ on:
     types: completed
 
 permissions: {}
+env:
+  OUTPUT_DIRECTORY: dist
 
 jobs:
   compile:
@@ -24,6 +26,9 @@ jobs:
           - darwin-arm64
           - linux-x64-musl
           - linux-arm64-musl
+
+    env:
+      BINARY_NAME: PanoptoScraper
 
     steps:
       - name: Checkout repository
@@ -41,13 +46,16 @@ jobs:
         run: bun install --frozen-lockfile
 
       - name: Compile
-        run: bun compile --target bun-${{ matrix.target }} --outfile dist/PanoptoScraper-${{ matrix.target }}
+        run: bun compile --target bun-${{ matrix.target }} --outfile dist/${{ env.BINARY_NAME }}-${{ matrix.target }}
+
+      - name: Remove source map sidecar(s)
+        run: rm dist/*.map
 
       - name: Upload artifact
         uses: actions/upload-artifact@v7.0.1
         with:
           name: build-${{ matrix.target }}
-          path: dist/PanoptoScraper-${{ matrix.target }}*
+          path: dist/${{ env.BINARY_NAME }}-${{ matrix.target }}*
           retention-days: 1
 
   release:

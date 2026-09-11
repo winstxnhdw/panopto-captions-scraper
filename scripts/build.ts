@@ -19,7 +19,6 @@ const command = Command.make('build', { test }, ({ test }) =>
         entrypoints: ['src/index.ts'],
         outdir: buildDirectory,
         target: 'bun',
-        format: 'esm',
         minify: !test,
       }),
     );
@@ -31,4 +30,4 @@ const cli = Command.run(command, {
   version: 'v1.0.0',
 });
 
-cli(Bun.argv).pipe(Effect.provide(BunContext.layer), BunRuntime.runMain);
+BunRuntime.runMain(cli(Bun.argv).pipe(Effect.provide(BunContext.layer)));
