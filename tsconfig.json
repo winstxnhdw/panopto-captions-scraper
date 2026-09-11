@@ -1,12 +1,8 @@
 {
+  "$schema": "./node_modules/@effect/tsgo/schema.json",
   "include": ["src/**/*.ts", "tests/**/*.ts", "scripts/**/*.ts"],
   "compilerOptions": {
     /* Visit https://aka.ms/tsconfig.json to read more about this file */
-    "plugins": [
-      {
-        "name": "@effect/language-service"
-      }
-    ],
     /* Projects */
     // "incremental": true,                              /* Enable incremental compilation */
     // "composite": true,                                /* Enable constraints that allow a TypeScript project to be used with project references. */
@@ -104,6 +100,11 @@
 
     /* Completeness */
     "skipDefaultLibCheck": true /* Skip type checking .d.ts files that are included with TypeScript. */,
-    "skipLibCheck": true /* Skip type checking all .d.ts files. */
+    "skipLibCheck": true,
+    "plugins": [
+      {
+        "name": "@effect/language-service"
+      }
+    ] /* Skip type checking all .d.ts files. */
   }
 }
