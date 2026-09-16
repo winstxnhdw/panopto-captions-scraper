@@ -14,7 +14,7 @@
     "tslib": "^2.8.1"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.5.13",
+    "@biomejs/biome": "2.5.14",
     "@effect/cli": "^0.77.2",
     "@types/bun": "latest",
     "@effect/tsgo": "0.45.0"
