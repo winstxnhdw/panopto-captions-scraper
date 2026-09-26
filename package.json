@@ -17,7 +17,7 @@
     "@biomejs/biome": "2.5.14",
     "@effect/cli": "^0.77.2",
     "@types/bun": "latest",
-    "@effect/tsgo": "0.46.0"
+    "@effect/tsgo": "0.46.1"
   },
   "peerDependencies": {
     "typescript": "latest"
