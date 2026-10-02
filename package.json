@@ -9,15 +9,15 @@
   },
   "dependencies": {
     "@effect/platform": "^0.97.2",
-    "@effect/platform-bun": "^0.91.2",
-    "effect": "^3.22.2",
+    "@effect/platform-bun": "^4.0.0",
+    "effect": "^4.0.0",
     "tslib": "^2.8.1"
   },
   "devDependencies": {
     "@biomejs/biome": "2.5.15",
     "@effect/cli": "^0.77.2",
     "@types/bun": "latest",
-    "@effect/tsgo": "0.47.1"
+    "@effect/tsgo": "0.48.0"
   },
   "peerDependencies": {
     "typescript": "latest"
